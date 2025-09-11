@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elle App | Zunayed | INVESTOR PORTAL</title>
+    <meta name="description" content="Download the latest Elle app APK and view investor materials. Developed by Ahmed.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #000;
+            color: #fff;
+            line-height: 1.2;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        .container {
+            max-width: 304px;
+        }
+
+        .name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 10px;
+            letter-spacing: 0.01em;
+            font-style: normal;
+            position: absolute;
+            top: 30px;
+            left: 72px;
+        }
+
+        .app-name {
+            font-size: 48px;
+            font-weight: 600;
+            color: #1d9bf0;
+            letter-spacing: 0.02em;
+            position: absolute;
+            top: 60px;
+            left: 72px;
+            text-align: left;
+        }
+
+        .developer {
+            font-size: 18px;
+            font-weight: 300;
+            color: #888;
+            position: absolute;
+            top: 120px;
+            left: 72px;
+            text-align: left;
+        }
+
+        .links {
+            list-style: none;
+            position: absolute;
+            top: 50%;
+            left: 72px;
+            transform: translateY(-50%);
+        }
+
+        .links li {
+            margin-bottom: 2px;
+            line-height: 1;
+        }
+
+        .links a {
+            color: #a1a1a1;
+            text-decoration: none;
+            font-size: 70px;
+            font-weight: 300;
+            letter-spacing: 0.01em;
+            transition: all 0s linear;
+        }
+
+        .links a:hover {
+            color: #fff;
+        }
+
+        /* Make it responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .name {
+                font-size: 14px;
+                top: 20px;
+                left: 20px;
+            }
+            
+            .app-name {
+                font-size: 36px;
+                top: 45px;
+                left: 20px;
+            }
+            
+            .developer {
+                font-size: 16px;
+                top: 90px;
+                left: 20px;
+            }
+            
+            .links {
+                left: 20px;
+            }
+            
+            .links a {
+                font-size: 32px;
+            }
+        }
+
+        /* PDF Modal styles */
+        .pdf-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pdf-modal.active {
+            display: flex;
+        }
+
+        .pdf-container {
+            width: 90%;
+            height: 90%;
+            background-color: #fff;
+            border: 1px solid #1d9bf0;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pdf-header {
+            background-color: #000;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pdf-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .pdf-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: calc(100% - 60px);
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .pdf-container {
+                width: 95%;
+                height: 95%;
+            }
+            
+            .contact-modal {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+
+        /* Video Modal styles */
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-modal.active {
+            display: flex;
+        }
+
+        .video-container {
+            width: 400px;
+            height: 710px;
+            background-color: #000;
+            border: 1px solid #1d9bf0;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-header {
+            background-color: #000;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .video-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .video-viewer {
+            width: 100%;
+            height: calc(100% - 60px);
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .video-container {
+                width: 95%;
+                height: 70vh;
+                max-height: 600px;
+            }
+        }
+
+        /* Contact Modal styles */
+        .contact-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background-color: #000;
+            border: 1px solid #1d9bf0;
+            border-radius: 8px;
+            padding: 30px;
+            display: none;
+            z-index: 1001;
+        }
+
+        .contact-modal.active {
+            display: block;
+        }
+
+        .contact-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            z-index: 1000;
+        }
+
+        .contact-overlay.active {
+            display: block;
+        }
+
+        .contact-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1d9bf0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .contact-email {
+            font-size: 18px;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 25px;
+            word-break: break-all;
+        }
+
+        .contact-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .contact-btn {
+            padding: 12px 20px;
+            background-color: transparent;
+            border: 1px solid #1d9bf0;
+            color: #1d9bf0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .contact-btn:hover {
+            background-color: #1d9bf0;
+            color: #000;
+        }
+
+        .contact-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .contact-close:hover {
+            color: #1d9bf0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+            <div class="name">INVESTOR PORTAL</div>
+    <div class="app-name">elle</div>
+    <div class="developer">Skincare Reimagined</div>
+        
+        <ul class="links">
+            <li><a href="./elleAI-MVP.apk" download>Download MVP</a></li>
+            <li><a href="#" id="demoVideoLink">Demo video</a></li>
+            <li><a href="#" id="pitchDeckLink">Pitch deck</a></li>
+            <li><a href="mailto:ahmedabdullahzunayed@gmail.com" id="contactLink">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-container">
+            <div class="video-header">
+                <div class="video-title">elleAI Demo</div>
+                <button class="video-close" id="closeVideoModal">&times;</button>
+            </div>
+            <iframe class="video-viewer" id="videoViewer" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- PDF Modal -->
+    <div class="pdf-modal" id="pdfModal">
+        <div class="pdf-container">
+            <div class="pdf-header">
+                <div class="pdf-title">elleAI Pitch Deck</div>
+                <button class="pdf-close" id="closePdfModal">&times;</button>
+            </div>
+            <iframe class="pdf-viewer" id="pdfViewer" src=""></iframe>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="contact-overlay" id="contactOverlay"></div>
+    <div class="contact-modal" id="contactModal">
+        <button class="contact-close" id="closeContactModal">&times;</button>
+        <div class="contact-title">Get in Touch</div>
+        <div class="contact-options">
+            <a href="#" class="contact-btn" id="openGmail">Open in Gmail</a>
+            <a href="#" class="contact-btn" id="copyEmail">Copy Email Address</a>
+            <a href="mailto:ahmedabdullahzunayed@gmail.com" class="contact-btn">Open Default Email App</a>
+        </div>
+    </div>
+
+    <script>
+        // Video Modal functionality
+        const demoVideoLink = document.getElementById('demoVideoLink');
+        const videoModal = document.getElementById('videoModal');
+        const videoViewer = document.getElementById('videoViewer');
+        const closeVideoModal = document.getElementById('closeVideoModal');
+
+        demoVideoLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            videoViewer.src = 'https://www.youtube.com/embed/fy39CpzosfA';
+            videoModal.classList.add('active');
+        });
+
+        closeVideoModal.addEventListener('click', function() {
+            videoModal.classList.remove('active');
+            videoViewer.src = ''; // Stop loading the video
+        });
+
+        // Close video modal when clicking outside
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === videoModal) {
+                videoModal.classList.remove('active');
+                videoViewer.src = '';
+            }
+        });
+
+        // PDF Modal functionality
+        const pitchDeckLink = document.getElementById('pitchDeckLink');
+        const pdfModal = document.getElementById('pdfModal');
+        const pdfViewer = document.getElementById('pdfViewer');
+        const closePdfModal = document.getElementById('closePdfModal');
+        const contactLink = document.getElementById('contactLink');
+
+        pitchDeckLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            pdfViewer.src = 'C:/Users/ahmed/Desktop/elle/Elle Skincare AI Pitch Deck Sept2025.pdf';
+            pdfModal.classList.add('active');
+        });
+
+        closePdfModal.addEventListener('click', function() {
+            pdfModal.classList.remove('active');
+            pdfViewer.src = ''; // Stop loading the PDF
+        });
+
+        // Close modal when clicking outside
+        pdfModal.addEventListener('click', function(e) {
+            if (e.target === pdfModal) {
+                pdfModal.classList.remove('active');
+                pdfViewer.src = '';
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (videoModal.classList.contains('active')) {
+                    videoModal.classList.remove('active');
+                    videoViewer.src = '';
+                }
+                if (pdfModal.classList.contains('active')) {
+                    pdfModal.classList.remove('active');
+                    pdfViewer.src = '';
+                }
+            }
+        });
+
+        // Enhanced contact functionality for web Gmail users
+        contactLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('contactModal').classList.add('active');
+            document.getElementById('contactOverlay').classList.add('active');
+        });
+
+        // Contact modal functionality
+        function closeContactModalFunc() {
+            document.getElementById('contactModal').classList.remove('active');
+            document.getElementById('contactOverlay').classList.remove('active');
+        }
+
+        document.getElementById('closeContactModal').addEventListener('click', closeContactModalFunc);
+        document.getElementById('contactOverlay').addEventListener('click', closeContactModalFunc);
+
+        // Close contact modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('contactModal').classList.contains('active')) {
+                closeContactModalFunc();
+            }
+        });
+
+        // Gmail option
+        document.getElementById('openGmail').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.open('https://mail.google.com/mail/?view=cm&to=ahmedabdullahzunayed@gmail.com', '_blank');
+            closeContactModalFunc();
+        });
+
+        // Copy email option
+        document.getElementById('copyEmail').addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = 'ahmedabdullahzunayed@gmail.com';
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(email).then(() => {
+                    e.target.textContent = 'Copied!';
+                    e.target.style.backgroundColor = '#1d9bf0';
+                    e.target.style.color = '#000';
+                    
+                    setTimeout(() => {
+                        e.target.textContent = 'Copy Email Address';
+                        e.target.style.backgroundColor = 'transparent';
+                        e.target.style.color = '#1d9bf0';
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
