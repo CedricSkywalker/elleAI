@@ -182,6 +182,37 @@
             border: none;
         }
 
+        .pdf-loading {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            font-size: 16px;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e3e3e3;
+            border-top: 4px solid #007AFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 768px) {
             .pdf-container {
                 width: 95%;
@@ -732,6 +763,10 @@
                 <div class="pdf-title">elleAI Pitch Deck</div>
                 <button class="pdf-close" id="closePdfModal">&times;</button>
             </div>
+            <div class="pdf-loading" id="pdfLoading">
+                <div class="loading-spinner"></div>
+                <div>Loading pitch deck...</div>
+            </div>
             <iframe class="pdf-viewer" id="pdfViewer" src=""></iframe>
         </div>
     </div>
@@ -833,18 +868,39 @@
         const pitchDeckLink = document.getElementById('pitchDeckLink');
         const pdfModal = document.getElementById('pdfModal');
         const pdfViewer = document.getElementById('pdfViewer');
+        const pdfLoading = document.getElementById('pdfLoading');
         const closePdfModal = document.getElementById('closePdfModal');
         const contactLink = document.getElementById('contactLink');
 
+        let pdfLoaded = false;
+
+        // Preload PDF for faster loading
+        function preloadPDF() {
+            if (!pdfLoaded) {
+                pdfViewer.src = './Elle-Skincare-AI-Pitch-Deck-Sept2025.pdf';
+                pdfViewer.onload = function() {
+                    pdfLoaded = true;
+                    pdfLoading.style.display = 'none';
+                };
+            }
+        }
+
         pitchDeckLink.addEventListener('click', function(e) {
             e.preventDefault();
-            pdfViewer.src = './Elle-Skincare-AI-Pitch-Deck-Sept2025.pdf';
+            
+            if (!pdfLoaded) {
+                pdfLoading.style.display = 'flex';
+                preloadPDF();
+            } else {
+                pdfLoading.style.display = 'none';
+            }
+            
             pdfModal.classList.add('active');
         });
 
         closePdfModal.addEventListener('click', function() {
             pdfModal.classList.remove('active');
-            pdfViewer.src = ''; // Stop loading the PDF
+            // Keep PDF loaded for faster subsequent access
         });
 
         // Close modal when clicking outside
@@ -922,6 +978,11 @@
                 });
             }
         });
+
+        // Auto-preload PDF after page loads (with delay to not impact initial loading)
+        setTimeout(function() {
+            preloadPDF();
+        }, 3000);
     </script>
 </body>
 </html>
