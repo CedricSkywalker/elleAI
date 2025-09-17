@@ -144,7 +144,7 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                margin-bottom: 54px;
+                margin-bottom: 20px;
             }
             
             .links a {
@@ -152,14 +152,7 @@
             }
             
             .waitlist-container {
-                position: relative;
-                bottom: auto;
-                left: 0;
-                right: 0;
-                max-width: none;
-                transform: none;
-                margin-top: 0;
-                margin-bottom: 20px;
+                display: none;
             }
         }
 
@@ -685,6 +678,64 @@
             }
         }
         /* Waitlist form styles */
+        .mobile-only {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-only {
+                display: block;
+            }
+        }
+        .waitlist-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .waitlist-modal.active {
+            display: flex;
+        }
+
+        .waitlist-modal-content {
+            background: rgba(29, 155, 240, 0.1);
+            border: 1px solid rgba(29, 155, 240, 0.3);
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .waitlist-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .waitlist-modal-close:hover {
+            color: #1d9bf0;
+        }
+
+        @media (min-width: 769px) {
+            .waitlist-modal {
+                display: none !important;
+            }
+        }
         .waitlist-container {
             position: fixed;
             bottom: 50%;
@@ -890,8 +941,23 @@
             <li><a href="#" id="demoVideoLink">Demo video</a></li>
             <li><a href="#" id="pitchDeckLink">Pitch deck</a></li>
             <li><a href="#" id="aboutLink">About</a></li>
+            <li><a href="#" id="waitlistLink" class="mobile-only">Waitlist</a></li>
             <li><a href="mailto:ahmedabdullahzunayed@gmail.com" id="contactLink">Contact</a></li>
         </ul>
+    </div>
+
+    <!-- Waitlist Modal -->
+    <div class="waitlist-modal" id="waitlistModal">
+        <div class="waitlist-modal-content">
+            <button class="waitlist-modal-close" id="closeWaitlistModal">&times;</button>
+            <div class="waitlist-title">Join Waitlist</div>
+            <form class="waitlist-form" id="waitlistModalForm">
+                <input type="text" class="waitlist-input" id="waitlistModalName" placeholder="Full Name" required>
+                <input type="email" class="waitlist-input" id="waitlistModalEmail" placeholder="Email Address" required>
+                <button type="submit" class="waitlist-submit" id="waitlistModalSubmit">Join Waitlist</button>
+                <div class="waitlist-message" id="waitlistModalMessage"></div>
+            </form>
+        </div>
     </div>
 
     <!-- Waitlist Container -->
@@ -1212,6 +1278,118 @@
         setTimeout(function() {
             preloadPDF();
         }, 3000);
+
+        // Waitlist Modal functionality
+        const waitlistLink = document.getElementById('waitlistLink');
+        const waitlistModal = document.getElementById('waitlistModal');
+        const closeWaitlistModal = document.getElementById('closeWaitlistModal');
+        const waitlistModalForm = document.getElementById('waitlistModalForm');
+        const waitlistModalMessage = document.getElementById('waitlistModalMessage');
+        const waitlistModalSubmit = document.getElementById('waitlistModalSubmit');
+
+        if (waitlistLink) {
+            waitlistLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                waitlistModal.classList.add('active');
+            });
+        }
+
+        if (closeWaitlistModal) {
+            closeWaitlistModal.addEventListener('click', function() {
+                waitlistModal.classList.remove('active');
+            });
+        }
+
+        // Close waitlist modal when clicking outside
+        waitlistModal.addEventListener('click', function(e) {
+            if (e.target === waitlistModal) {
+                waitlistModal.classList.remove('active');
+            }
+        });
+
+        // Waitlist modal form functionality
+        if (waitlistModalForm) {
+            waitlistModalForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const now = Date.now();
+                if (now - lastSubmissionTime < RATE_LIMIT_MS) {
+                    const remainingTime = Math.ceil((RATE_LIMIT_MS - (now - lastSubmissionTime)) / 1000);
+                    showModalMessage(`Please wait ${remainingTime} seconds before submitting again`, true);
+                    return;
+                }
+                
+                const name = document.getElementById('waitlistModalName').value.trim();
+                const email = document.getElementById('waitlistModalEmail').value.trim();
+                
+                if (!name) {
+                    showModalMessage('Please enter your name', true);
+                    return;
+                }
+                
+                if (!email) {
+                    showModalMessage('Please enter a valid email with @ and .com', true);
+                    return;
+                }
+                
+                if (!validateEmail(email)) {
+                    showModalMessage('Please enter a valid email with @ and .com', true);
+                    return;
+                }
+                
+                waitlistModalSubmit.disabled = true;
+                waitlistModalSubmit.textContent = 'Joining...';
+                lastSubmissionTime = now;
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                try {
+                    const response = await fetch('https://discord.com/api/webhooks/1417892066993639536/PBo6yjfgmWTT4NZiefjejWE4N7u06aactsa_XMrahnsxIO6WmSDMhcRyd2gK4v65YxNp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            content: `**New Waitlist Entry**\n📝 **Name:** ${name}\n📧 **Email:** ${email}\n🕒 **Time:** ${new Date().toLocaleString()}`
+                        }),
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    
+                    if (response.ok) {
+                        showModalMessage('Successfully joined waitlist!', false);
+                        waitlistModalForm.reset();
+                        setTimeout(() => {
+                            waitlistModal.classList.remove('active');
+                        }, 2000);
+                    } else {
+                        throw new Error('Failed to submit');
+                    }
+                } catch (error) {
+                    clearTimeout(timeoutId);
+                    if (error.name === 'AbortError') {
+                        showModalMessage('Request timed out. Please try again.', true);
+                    } else {
+                        showModalMessage('Error joining waitlist. Please try again.', true);
+                    }
+                } finally {
+                    waitlistModalSubmit.disabled = false;
+                    waitlistModalSubmit.textContent = 'Join Waitlist';
+                }
+            });
+        }
+
+        function showModalMessage(text, isError = false, duration = 5000) {
+            waitlistModalMessage.textContent = text;
+            waitlistModalMessage.className = `waitlist-message ${isError ? 'waitlist-error' : 'waitlist-success'}`;
+            
+            setTimeout(() => {
+                waitlistModalMessage.textContent = '';
+                waitlistModalMessage.className = 'waitlist-message';
+            }, duration);
+        }
 
         // Waitlist form functionality
         const waitlistForm = document.getElementById('waitlistForm');
