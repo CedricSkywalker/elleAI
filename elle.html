@@ -677,14 +677,68 @@
                 padding: 24px 20px;
             }
         }
-        /* Waitlist form styles */
-        .mobile-only {
+        /* Mobile Navigation Styles */
+        .mobile-nav {
             display: none;
         }
 
+        .nav-category {
+            margin-bottom: 32px;
+        }
+
+        .nav-category-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .nav-category-links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .nav-category-links a {
+            color: #a1a1a1;
+            text-decoration: none;
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 0.01em;
+            transition: all 0s linear;
+            text-align: center;
+            padding: 8px 16px;
+            display: block;
+            margin: 2px 0;
+            border-radius: 8px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-category-links a:hover {
+            color: #fff;
+        }
+
         @media (max-width: 768px) {
-            .mobile-only {
+            .links {
+                display: none;
+            }
+            
+            .mobile-nav {
                 display: block;
+                position: relative;
+                top: auto;
+                left: 0;
+                transform: none;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                margin-bottom: 20px;
             }
         }
         .waitlist-modal {
@@ -732,21 +786,12 @@
         }
 
         @media (min-width: 769px) {
-            .waitlist-modal {
-                display: none !important;
+            .waitlist-container {
+                display: none;
             }
         }
         .waitlist-container {
-            position: fixed;
-            bottom: 50%;
-            right: 24px;
-            transform: translateY(50%);
-            background: rgba(29, 155, 240, 0.1);
-            border: 1px solid rgba(29, 155, 240, 0.3);
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 280px;
-            backdrop-filter: blur(10px);
+            display: none;
         }
 
         .waitlist-title {
@@ -861,13 +906,27 @@
                 margin-bottom: 20px;
             }
             
-            .links {
-                margin-bottom: 54px;
+            .mobile-nav {
+                margin-bottom: 20px;
             }
             
-            .links a {
-                font-size: 26px;
-                margin-bottom: 1px;
+            .nav-category {
+                margin-bottom: 28px;
+            }
+            
+            .nav-category-title {
+                font-size: 11px;
+                margin-bottom: 12px;
+            }
+            
+            .nav-category-links {
+                gap: 12px;
+            }
+            
+            .nav-category-links a {
+                font-size: 24px;
+                padding: 6px 16px;
+                min-height: 44px;
             }
             
             .waitlist-container {
@@ -911,12 +970,23 @@
                 margin-bottom: 15px;
             }
             
-            .links {
-                margin-bottom: 54px;
+            .mobile-nav {
+                margin-bottom: 15px;
             }
             
-            .links a {
-                font-size: 22px;
+            .nav-category {
+                margin-bottom: 24px;
+            }
+            
+            .nav-category-title {
+                font-size: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .nav-category-links a {
+                font-size: 20px;
+                padding: 6px 16px;
+                min-height: 44px;
             }
             
             .waitlist-container {
@@ -941,9 +1011,30 @@
             <li><a href="#" id="demoVideoLink">Demo video</a></li>
             <li><a href="#" id="pitchDeckLink">Pitch deck</a></li>
             <li><a href="#" id="aboutLink">About</a></li>
-            <li><a href="#" id="waitlistLink" class="mobile-only">Waitlist</a></li>
+            <li><a href="#" id="waitlistLink">Waitlist</a></li>
             <li><a href="mailto:ahmedabdullahzunayed@gmail.com" id="contactLink">Contact</a></li>
         </ul>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav" id="mobileNav">
+            <div class="nav-category">
+                <div class="nav-category-title">PRODUCT</div>
+                <div class="nav-category-links">
+                    <a href="https://github.com/CedricSkywalker/elleAI/releases/download/mvp-v1.0/elleAI-MVP.apk" download>Download MVP</a>
+                    <a href="#" id="demoVideoLinkMobile">Demo video</a>
+                </div>
+            </div>
+            
+            <div class="nav-category">
+                <div class="nav-category-title">COMPANY</div>
+                <div class="nav-category-links">
+                    <a href="#" id="pitchDeckLinkMobile">Pitch deck</a>
+                    <a href="#" id="aboutLinkMobile">About</a>
+                    <a href="#" id="waitlistLinkMobile">Waitlist</a>
+                    <a href="mailto:ahmedabdullahzunayed@gmail.com" id="contactLinkMobile">Contact</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Waitlist Modal -->
@@ -991,7 +1082,7 @@
                         <span class="stat-desc">Average dermatologist visit</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-value" data-target="200">$200B</span>
+                        <span class="stat-value" data-target="265">$265B</span>
                         <span class="stat-desc">Global skincare market</span>
                     </div>
                     <div class="stat-item">
@@ -1115,7 +1206,7 @@
                 const timer = setInterval(() => {
                     current += increment;
                     if (current >= target) {
-                        element.textContent = target === 200 ? '$200B' : 
+                        element.textContent = target === 265 ? '$265B' : 
                                             target === 300 ? '$300' : 
                                             target === 2.5 ? '2.5' : target;
                         clearInterval(timer);
@@ -1278,6 +1369,58 @@
         setTimeout(function() {
             preloadPDF();
         }, 3000);
+
+        // Mobile Navigation Event Listeners
+        const demoVideoLinkMobile = document.getElementById('demoVideoLinkMobile');
+        const pitchDeckLinkMobile = document.getElementById('pitchDeckLinkMobile');
+        const aboutLinkMobile = document.getElementById('aboutLinkMobile');
+        const waitlistLinkMobile = document.getElementById('waitlistLinkMobile');
+        const contactLinkMobile = document.getElementById('contactLinkMobile');
+
+        if (demoVideoLinkMobile) {
+            demoVideoLinkMobile.addEventListener('click', function(e) {
+                e.preventDefault();
+                videoViewer.src = 'https://www.youtube.com/embed/fy39CpzosfA';
+                videoModal.classList.add('active');
+            });
+        }
+
+        if (pitchDeckLinkMobile) {
+            pitchDeckLinkMobile.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!pdfLoaded) {
+                    pdfLoading.style.display = 'flex';
+                    preloadPDF();
+                } else {
+                    pdfLoading.style.display = 'none';
+                }
+                pdfModal.classList.add('active');
+            });
+        }
+
+        if (aboutLinkMobile) {
+            aboutLinkMobile.addEventListener('click', function(e) {
+                e.preventDefault();
+                aboutModal.style.display = 'flex';
+                setTimeout(() => aboutModal.classList.add('show'), 10);
+                animateNumbers();
+            });
+        }
+
+        if (contactLinkMobile) {
+            contactLinkMobile.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('contactModal').classList.add('active');
+                document.getElementById('contactOverlay').classList.add('active');
+            });
+        }
+
+        if (waitlistLinkMobile) {
+            waitlistLinkMobile.addEventListener('click', function(e) {
+                e.preventDefault();
+                waitlistModal.classList.add('active');
+            });
+        }
 
         // Waitlist Modal functionality
         const waitlistLink = document.getElementById('waitlistLink');
